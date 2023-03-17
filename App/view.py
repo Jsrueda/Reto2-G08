@@ -40,13 +40,19 @@ operación solicitada
 """
 
 
-def new_controller():
+def new_controller(maptype):
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control = controller.new_controller(maptype) 
+    return control
 
+def selector_maptype(input):
+    if input == "1":
+        maptype = "CHAINING"
+    elif input == "2":
+        maptype = "PROBING"
+    return maptype
 
 def print_menu():
     print("Bienvenido")
@@ -62,14 +68,71 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_data(control, filename):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    size = controller.load_data(control, filename)
+    return size
 
+def print_maptypes():
+    print("1. CHAINING")
+    print("2. PROBING")
 
+def print_opciones_archivo():
+    print('1. 0.5% ')
+    print('2. 5% ')
+    print('3. 10% ')
+    print('4. 20% ')
+    print('5. 30% ')
+    print('6. 50% ')
+    print('7. 80% ')
+    print('8. 100% ') 
+
+def seleccionar_archivo(opt):
+    filename = "Salida_agregados_renta_juridicos_AG"
+    filename_modificado = ''
+    porcentaje_seleccionado = ''
+    if opt == 1:
+        filename_modificado = filename + "-small.csv"
+        porcentaje_seleccionado = '0.5%'
+    if opt == 2:
+        filename_modificado = filename + "-5pct.csv"
+        porcentaje_seleccionado = '5%'
+    elif opt == 3:
+        filename_modificado = filename + "-10pct.csv"
+        porcentaje_seleccionado = '10%'
+    elif opt == 4:
+        filename_modificado = filename + "-20pct.csv"
+        porcentaje_seleccionado = '20%'
+    elif opt == 5:
+        filename_modificado = filename + "-30pct.csv"
+        porcentaje_seleccionado = '30%'
+    elif opt == 6:
+        filename_modificado = filename + "-50pct.csv"
+        porcentaje_seleccionado = '50%'
+    elif opt == 7:
+        filename_modificado = filename + "-80pct.csv"
+        porcentaje_seleccionado = '80%'
+    elif opt == 8:
+        filename_modificado = filename + "-large.csv"
+        porcentaje_seleccionado = '100%'
+
+    return filename_modificado, porcentaje_seleccionado
+
+def print_opt1():
+    print_maptypes()
+    entrada = input("Elija el tipo de mapa que desea: ")
+    maptype = selector_maptype(entrada)
+    print("\n")
+    print_opciones_archivo()
+    opt = int(input("Elija el porcentaje del archivo a cargar: "))
+    control = new_controller(maptype)
+    filename, porcentaje = seleccionar_archivo(opt)
+    print(f"Cargando el {porcentaje} de la información")
+    size = load_data(control, filename)
+    print("Total de filas cargadas:" + str(size))
+    
 def print_data(control, id):
     """
         Función que imprime un dato dado su ID
@@ -142,7 +205,7 @@ def print_req_8(control):
 
 
 # Se crea el controlador asociado a la vista
-control = new_controller()
+#control = new_controller()
 
 # main del reto
 if __name__ == "__main__":
@@ -156,8 +219,7 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
-                print("Cargando información de los archivos ....\n")
-                data = load_data(control)
+                control = print_opt1()
             elif int(inputs) == 2:
                 print_req_1(control)
 

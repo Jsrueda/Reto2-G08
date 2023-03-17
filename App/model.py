@@ -46,14 +46,13 @@ dos listas, una para los videos, otra para las categorias de los mismos.
 # Construccion de modelos
 
 
-def new_data_structs():
+def new_data_structs(maptype):
     """
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
-    #TODO: Inicializar las estructuras de datos
-    pass
-
+    adt = mp.newMap(maptype= maptype)
+    return adt
 
 # Funciones para agregar informacion al modelo
 
@@ -62,7 +61,7 @@ def add_data(data_structs, data):
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
-    pass
+    mp.put(data_structs, )
 
 
 # Funciones para creacion de datos
