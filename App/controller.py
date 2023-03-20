@@ -32,11 +32,14 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 csv.field_size_limit(2147483647)
 
-def new_controller(maptype):
+def new_controller(maptype, numelements):
     """
     Crea una instancia del modelo
     """
-    control = model.new_data_structs(maptype)
+    control = {
+        "model": None
+    }
+    control["model"] = model.new_data_structs_map(maptype, numelements)
     return control
 
 
@@ -46,24 +49,27 @@ def load_data(control, filename):
     """
     Carga los datos del reto
     """
-    data_structure = control
+    control = model.new_data_structs_list(data_type="SINGLE_LINKED", cmpfunction_= model.compare)
     file = cf.data_dir + filename
-    input_file = csv.DictReader(open(file, encoding="utf-8"))
-    input_file = input_file
+    input_file = list(csv.DictReader(open(file, encoding="utf-8")))
+    id = 0
     for info in input_file:
-        model.add_data(control, info)
-    size = len(input_file)
-    return  size
+        model.add_data_list(control, info, id)
+        id +=1
+    sort(control, "MergeSort", model.cmp_impuestos_by_anio_CAE)
+    return control
+    control = model.organizar_por_anio(control)
+    #size = model.data_size(control)
+    return  control
 
 
 # Funciones de ordenamiento
 
-def sort(control):
+def sort(control, algorithm, cmpfunction):
     """
     Ordena los datos del modelo
     """
-    #TODO: Llamar la función del modelo para ordenar los datos
-    pass
+    model.sort(control, algorithm, cmpfunction)
 
 
 # Funciones de consulta sobre el catálogo

@@ -40,11 +40,11 @@ operación solicitada
 """
 
 
-def new_controller(maptype):
+def new_controller(maptype, numelements):
     """
         Se crea una instancia del controlador
     """
-    control = controller.new_controller(maptype) 
+    control = controller.new_controller(maptype, numelements) 
     return control
 
 def selector_maptype(input):
@@ -127,7 +127,7 @@ def print_opt1():
     print("\n")
     print_opciones_archivo()
     opt = int(input("Elija el porcentaje del archivo a cargar: "))
-    control = new_controller(maptype)
+    control = new_controller(maptype, 0)
     filename, porcentaje = seleccionar_archivo(opt)
     print(f"Cargando el {porcentaje} de la información")
     size = load_data(control, filename)
