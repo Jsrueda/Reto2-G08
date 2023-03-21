@@ -222,23 +222,31 @@ def cmp_impuestos_by_anio_CAE(impuesto1, impuesto2):
         return False 
     
 # Funciones de ordenamiento
-def organizar_por_anio(datastruct):
+def organizar_por_anio(map, list_datos):
     """
-        while i < data_size(datastruct):
-        #return datastruct["data"]["elements"][0]["info"]["Año"]
-        datos_anio = new_data_structs_list("ARRAY_LIST", cmp_impuestos_by_anio_CAE)
-        if mp.contains(map_anios, datastruct["data"]["elements"][i]["info"]["Año"]) == False:    
-            add_data_list(datos_anio, datastruct["data"]["elements"][i]["info"], i)        
-            put(map_anios, datastruct["data"]["elements"][i]["info"]["Año"], datos_anio)
+       Retorna un Map el cual tiene como llaves los diferentes años y como valores un DT lista con sus datos ordenados por codigo act. económica
+    
     """
-    map_anios = new_data_structs_map("PROBING", 1)
-    dict_anios = {}    
-    i = 0
-    for dato in datastruct["data"]["elements"]:
-        if dato["info"]["Año"] not in dict_anios:
-            dict_anios[dato["info"]["Año"]] = new_data_structs_list("ARRAY_LIST", cmp_impuestos_by_anio_CAE)
-        add_data_list(dict_anios[dato["info"]["Año"]], dato["info"], i)
-    return dict_anios
+    map_anios = map["model"]
+    
+    if map_anios["type"] == "CHAINING":
+        return map_anios
+        
+    for dato in list_datos["data"]["elements"]:
+        mp.put(map_anios, dato["info"]["Año"], dato["info"])
+    anios = sorted(mp.keySet(map_anios)["elements"])
+    for anio in anios:
+        mp.remove(map_anios, anio)
+    for i in anios:
+        dt_anio = new_data_structs_list("ARRAY_LIST", cmp_impuestos_by_anio_CAE)
+        for dato in list_datos["data"]["elements"]:
+            if dato["info"]["Año"] == i:
+                add_data_list(dt_anio, dato["info"], i)
+            sort(dt_anio, "MergeSort", cmp_impuestos_by_anio_CAE)
+            mp.put(map_anios, i, dt_anio)
+    return map_anios
+
+
 
 def sort_criteria_1(data_1, data_2):
     """sortCriteria criterio de ordenamiento para las funciones de ordenamiento

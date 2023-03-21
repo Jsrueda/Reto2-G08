@@ -127,11 +127,12 @@ def print_opt1():
     print("\n")
     print_opciones_archivo()
     opt = int(input("Elija el porcentaje del archivo a cargar: "))
-    control = new_controller(maptype, 0)
+    control = new_controller(maptype, 1)
     filename, porcentaje = seleccionar_archivo(opt)
     print(f"Cargando el {porcentaje} de la información")
-    size = load_data(control, filename)
+    size, map = load_data(control, filename)
     print("Total de filas cargadas:" + str(size))
+    #print(map)
     
 def print_data(control, id):
     """

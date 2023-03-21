@@ -49,18 +49,19 @@ def load_data(control, filename):
     """
     Carga los datos del reto
     """
-    control = model.new_data_structs_list(data_type="SINGLE_LINKED", cmpfunction_= model.compare)
+    list_datos = model.new_data_structs_list(data_type="ARRAY_LIST", cmpfunction_= model.compare)
     file = cf.data_dir + filename
     input_file = list(csv.DictReader(open(file, encoding="utf-8")))
     id = 0
     for info in input_file:
-        model.add_data_list(control, info, id)
+        model.add_data_list(list_datos, info, id)
         id +=1
-    sort(control, "MergeSort", model.cmp_impuestos_by_anio_CAE)
-    return control
-    control = model.organizar_por_anio(control)
-    #size = model.data_size(control)
-    return  control
+    sort(list_datos, "MergeSort", model.cmp_impuestos_by_anio_CAE)
+    #control = model.new_data_structs_map("PROBING", 1)
+    #return control
+    size = model.data_size(list_datos)
+    control = model.organizar_por_anio(control, list_datos)
+    return  size, control
 
 
 # Funciones de ordenamiento
