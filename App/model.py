@@ -68,7 +68,39 @@ def new_data_structs_list(data_type, cmpfunction_):
 
     return data_structs
 
-
+def datos_filtrados(dict_anios, llaves_a_incluir):
+    list_values = []
+    #Extrae los tres primeros y últimos datos de cada año
+    #Ordena los datos de cada año por Código de actividad económica
+    datos_filtrados = dict_anios.copy()
+    
+    for año in datos_filtrados:
+        #sort(datos_filtrados[año], 'MergeSort', cmp_impuestos_by_CAE)
+        list_complete = []
+        first_three = lt.subList(datos_filtrados[año]['data'], 1, 3) 
+          
+        last_three = lt.subList(datos_filtrados[año]['data'], datos_filtrados[año]['data']['size']-2, 3)
+        
+        for i in range(3):
+            dato = lt.getElement(first_three, i+1)
+            list_complete.append(dato)
+        
+        for i in range(3):
+            dato = lt.getElement(last_three, i+1)
+            list_complete.append(dato)
+        list_values.extend(list_complete)
+        
+    list_values_info = []
+    #Añade en una lista otra lista que contiene la informacion de cada dato. Esto es para usar tabulate en view
+    for data in list_values:
+        data_copy = data['info'].copy()
+        data_copy_2 ={}
+        for llave in data_copy:
+            if llave in llaves_a_incluir:
+                data_copy_2[llave]=data_copy[llave]
+        list_data = list(data_copy_2.values())
+        list_values_info.append(list_data)
+    return list_values_info 
 
 
 def data_size(data_structs):
@@ -89,13 +121,6 @@ def add_data_list(data_structs, data, id):
     return data_structs
 
 # Funciones para creacion de datos
-
-def new_data(id, info):
-    """
-    Crea una nueva estructura para modelar los datos
-    """
-    #TODO: Crear la función para estructurar los datos
-    pass
 
 def new_data_list(id=0, info=""):
     """
@@ -119,8 +144,11 @@ def get_data(data_structs, id):
     """
     Retorna un dato a partir de su ID
     """
-    #TODO: Crear la función para obtener un dato de una lista
-    pass
+    pos_data = lt.isPresent(data_structs["data"], id)
+    if pos_data > 0:
+        data = lt.getElement(data_structs["data"], pos_data)
+        return data
+    return None
 
 
 def data_size(data_structs):
@@ -224,19 +252,18 @@ def cmp_impuestos_by_anio_CAE(impuesto1, impuesto2):
 # Funciones de ordenamiento
 def organizar_por_anio(map, list_datos):
     """
-       Retorna un Map el cual tiene como llaves los diferentes años y como valores un DT lista con sus datos ordenados por codigo act. económica
-    
+       Retorna un Map el cual tiene como llaves los diferentes años y 
+       como valores un DT lista con sus datos ordenados por codigo act. económica
+       
+        if map_anios["type"] == "CHAINING":
+        
+        return map_anios
     """
     map_anios = map["model"]
-    
-    if map_anios["type"] == "CHAINING":
-        return map_anios
-        
     for dato in list_datos["data"]["elements"]:
         mp.put(map_anios, dato["info"]["Año"], dato["info"])
-    anios = sorted(mp.keySet(map_anios)["elements"])
-    for anio in anios:
-        mp.remove(map_anios, anio)
+    #Añade al map las llaves con los años
+    anios = mp.keySet(map_anios)["elements"]
     for i in anios:
         dt_anio = new_data_structs_list("ARRAY_LIST", cmp_impuestos_by_anio_CAE)
         for dato in list_datos["data"]["elements"]:

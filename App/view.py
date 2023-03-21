@@ -89,6 +89,14 @@ def print_opciones_archivo():
     print('7. 80% ')
     print('8. 100% ') 
 
+def datos_tabla(dict_anio):
+    llaves_a_incluir = ["Año", "Código actividad económica", "Nombre actividad económica", 
+                    "Código sector económico", "Nombre sector económico", "Código subsector económico", 
+                    "Nombre subsector económico","Total ingresos netos", "Total costos y gastos", 
+                    "Total saldo a pagar", "Total saldo a favor"]
+    list_values_info = controller.datos_filtrados(dict_anio, llaves_a_incluir)
+    return list_values_info
+
 def seleccionar_archivo(opt):
     filename = "Salida_agregados_renta_juridicos_AG"
     filename_modificado = ''
@@ -132,7 +140,30 @@ def print_opt1():
     print(f"Cargando el {porcentaje} de la información")
     size, map = load_data(control, filename)
     print("Total de filas cargadas:" + str(size))
-    #print(map)
+    print("\n\n")
+    #print(mp.valueSet(map))
+    #for pareja_anio_valor in map["table"]["elements"]:
+        #if pareja_anio_valor["key"] == None:
+    tabla_imprimir = {}     
+    for anio in sorted(mp.keySet(map)["elements"]):
+        for actividad in mp.valueSet(map)["elements"]:
+            if actividad["data"]["elements"][0]["id"] == anio:
+                tabla_imprimir[anio] = actividad
+                
+    columnas_a_mostrar = ["Año", 
+                        "Código actividad \neconómica", 
+                        "Nombre actividad \neconómica", 
+                        "Código sector \neconómico",
+                        "Nombre sector \neconómico",
+                        "Código subsector \neconómico", 
+                        "Nombre subsector \neconómico",
+                        "Total ingresos netos", 
+                        "Total costos y gastos", 
+                        "Total saldo a pagar", 
+                        "Total saldo a favor"]
+    list_values_info = datos_tabla(tabla_imprimir)
+    print(tabulate(list_values_info, headers=columnas_a_mostrar, tablefmt='grid', maxcolwidths=[None, None,20,None,20,None,20, None, None, None]))
+
     
 def print_data(control, id):
     """

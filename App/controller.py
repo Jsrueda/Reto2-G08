@@ -57,13 +57,12 @@ def load_data(control, filename):
         model.add_data_list(list_datos, info, id)
         id +=1
     sort(list_datos, "MergeSort", model.cmp_impuestos_by_anio_CAE)
-    #control = model.new_data_structs_map("PROBING", 1)
-    #return control
     size = model.data_size(list_datos)
     control = model.organizar_por_anio(control, list_datos)
     return  size, control
 
-
+def datos_filtrados(dict_anios, llaves_a_incluir):
+    return model.datos_filtrados(dict_anios, llaves_a_incluir)
 # Funciones de ordenamiento
 
 def sort(control, algorithm, cmpfunction):
